@@ -175,3 +175,87 @@ output$chatBox0 = renderUI({
 
 Hasta aquí hemos realizado una primera consulta a Gemini le enviamos la instrucción original (que definimos en la variable "prompt"). Si hicimos todo bien, nuestra aplicación debería lucir similar a esto:
 
+![alt text](https://github.com/agsantoro/chatbotR/blob/main/Images/1755090327217.png?raw=true)
+
+Ahora debemos programar la dinámica de la conversación que va a entablar el usuario con Gemini a través de nuestra Shiny App. Para eso, vamos a definir un proceso que se va a iniciar cada vez que el usuario ingrese un mensaje y presione el botón "send" y que va a tener los siguientes componentes:
+
+- Una variable que guarda el número de chat (value)
+
+- Una variable que guarda el número de chat previo (prevValue)
+
+- Un comando para insertar un contenedor en la interfaz de usuario (insertUI) que contenga la respuesta de Gemini a la consulta del usuario, el comando que agrega la nueva respuesta al historial de chat, un área para ingresar el texto de la próxima consulta (textAreaInput)
+
+- Un comando para inhabilitar la edición de las consultas previas (disable)
+
+- Un comando para diseñar el layout del bloque de UI que insertamos (tagList)
+
+- Con estos componentes, el código queda de la siguiente manera:
+
+observeEvent(input$send, {
+    chatNumber(isolate(chatNumber()+1)) 
+    value = isolate(chatNumber()) # almacena el número de chat
+    prevValue = value-1 # almacena el número de chat previo
+
+```
+# inserta el nuevo contenedor en la UI
+insertUI(
+  selector = "#chatBox",
+  where = "beforeEnd",
+  ui = div(
+    uiOutput(glue("chatBox{value}")))
+)
+    
+output[[glue("chatBox{value}")]] = renderUI({
+     
+  output[[glue("gemini{value}")]] = renderUI({
+        
+    response = gemini_chat(input[[glue("prompt{prevValue}")]], isolate(chatHistory$history)) # respuesta de Gemini
+     
+    chatHistory$history = response$history # agrega nueva respuesta al historial
+       
+    HTML(markdown::markdownToHTML(text = as.character(response$outputs), fragment.only = TRUE)) # muestra respues con formato
+   })
+      
+      output[[glue("prompt{value}")]] = renderUI({
+        tagList(
+          textAreaInput(glue("prompt{value}"),"Ingresar consulta") # agrega nueva área de texto
+        )
+      })
+      
+      shinyjs::disable(glue("prompt{prevValue}")) # inhabilita área de texto de conversación anterior
+      
+  # agrega bloque a la UI
+  tagList(
+    fluidRow(
+      column(
+        6,
+        uiOutput(glue("gemini{value}")),
+        uiOutput(glue("prompt{value}"))
+            
+      )
+    )
+  )
+})
+```
+
+## 5. Conclusión
+
+Se puede acceder al código completo aquí:
+
+Trabajamos sobre la integración de un chatbot basado en Gemini en una visualización de datos. El uso de R, Shiny y Gemini en forma conjunta puede transformar la interacción de los usuarios de nuestras visualizaciones con los datos. Al integrar estas herramientas, se permite a los usuarios hacer preguntas en lenguaje natural, lo que elimina la necesidad de navegar por menúes, selectores o aplicar filtros. 
+
+Con el modelo de aplicación presentada como base, puede cambiarse el origen de la información con un esfuerzo mínimo, con el objetivo de desarrollar una Shiny App donde el modelo generativo interprete datos propios (y no dataset de ejemplos como en este caso).
+
+Dentro de las ventajas del desarrollo de este tipo de aplicaciones podemos destacar que, para quien tiene experiencia en R y Shiny, la integración es natural, aprovechando el mismo entorno de desarrollo para el análisis y la visualización. Esto permite una personalización completa de la interfaz y un control total sobre cómo el chatbot interactúa con los datos. Por otro lado, el entorno de desarrollo permite el aprovechamiento de las potencialidades de R para el análisis de datos. Además, las aplicaciones basadas en Shiny son fácilmente desplegables en la web a partir de los servicios de shinyapps.io 
+
+Como limitación debe destacarse que en entornos R/Shiny, a pesar de poder manejar un número considerable de usuarios, la escalabilidad de la aplicación dependerá no solo del rendimiento de la aplicación en el servidor, sino también de la capacidad de la API de Gemini para gestionar el volumen de solicitudes, generando la necesidad de acceder a servicios pagos para aumentar la escala del producto.
+
+Esperamos que haya sido de utilidad y puedan compartir sus experiencias en los comentarios.
+
+Se puede acceder al código completo aquí:
+
+[AGREGAR LINK DE GIST]
+
+En este video puede ver la aplicación funcionando:
+
+[INSERTAR VIDEO]
