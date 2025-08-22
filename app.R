@@ -29,7 +29,7 @@ server <- function(input, output, session) {
     dataPrompt = paste(csv_output, collapse = "\n") # convierte el conjunto de valores separados por comas en una única cadena de texto
     
     prompt = glue("A partir de ahora vas a interactuar con un usuario sobre la información estadística del 
-                  dataset Iris, debes recibirlo con un mensaje de bienvenida. Aquí los datos --->  
+                  dataset Iris, debes recibirlo con un mensaje de bienvenida. Aquí los datos en csv --->  
                   {dataPrompt}") # prompt completo con los datos
     
     response = gemini_chat(prompt) # respuesta de Gemini
