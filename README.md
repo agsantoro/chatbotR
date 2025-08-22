@@ -83,8 +83,9 @@ En primer lugar, crearemos dos valores reactivos para ir almacenando informació
 ```
 chatNumber = reactiveVal(0) # almacena el número de consulta/respuesta
 chatHistory = reactiveValues() # almacena el historial de consultas y respuestas
-Una vez que contamos con los valores reactivos, crearemos nuestro primer output. Lo llamaremos "chatBox0" ya que su función será mostrar el mensaje inicial que dará Gemini al usuario de la aplicación. Recordemos que nuestro chat servirá para entablar una conversación sobre un set de datos, donde Gemini colaborará en el análisis. 
 ```
+
+Una vez que contamos con los valores reactivos, crearemos nuestro primer output. Lo llamaremos "chatBox0" ya que su función será mostrar el mensaje inicial que dará Gemini al usuario de la aplicación. Recordemos que nuestro chat servirá para entablar una conversación sobre un set de datos, donde Gemini colaborará en el análisis. 
 
 El output lo crearemos usando la función renderUI() que nos va a permitir crear dinámicamente un contenedor HTML, que se mostrará dentro del contenedor vacío que creamos en la interfaz de usuario ("chatBox").
 
@@ -106,12 +107,12 @@ dataPrompt = paste(csvOutput, collapse = "\n")
 
 3. Un objeto llamado prompt donde insertaremos los datos de Iris en nuestro primer mensaje, con el que iniciaremos la conversación. Para este ejemplo, el mensaje será el siguiente: 
 
-> A partir de ahora vas a interactuar con un usuario sobre la información estadística del dataset Iris, debes recibirlo con un mensaje de bienvenida. Aquí los datos --->
+> A partir de ahora vas a interactuar con un usuario sobre la información estadística del dataset Iris, debes recibirlo con un mensaje de bienvenida. Aquí los datos en csv --->
 
 Finalmente obtendremos el prompt completo insertándole los datos usando la función glue:
 
 ```
-prompt = glue("A partir de ahora vas a interactuar con un usuario sobre la información estadística del dataset Iris, debes recibirlo con un mensaje de bienvenida. Aquí los datos --->  {dataPrompt}")
+prompt = glue("A partir de ahora vas a interactuar con un usuario sobre la información estadística del dataset Iris, debes recibirlo con un mensaje de bienvenida. Aquí los datos en csv --->  {dataPrompt}")
 ```
 
 A partir de ese prompt, generaremos un objeto nuevo con la respuesta (response). Debe tenerse en cuenta que el objeto que devuelve gemini.R es una lista donde ubica en la variable $history archiva el historial del chat. Este historial lo guardaremos en nuestro objeto reactivo chatHistory:
