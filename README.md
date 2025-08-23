@@ -253,10 +253,5 @@ Como limitación debe destacarse que en entornos R/Shiny, a pesar de poder manej
 
 Esperamos que haya sido de utilidad y puedan compartir sus experiencias en los comentarios.
 
-Se puede acceder al código completo aquí:
+Se puede acceder al código completo [aquí](https://github.com/agsantoro/chatbotR/blob/main/app.R)
 
-[AGREGAR LINK DE GIST]
-
-En este video puede ver la aplicación funcionando:
-
-[INSERTAR VIDEO]
